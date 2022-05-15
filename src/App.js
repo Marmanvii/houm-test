@@ -1,19 +1,19 @@
 import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
 import Pagination from '@mui/material/Pagination';
-import Select from '@mui/material/Select';
 import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import CardList from './components/CardList';
 import Header from './Layout/header/Header';
 import TextField from '@mui/material/TextField';
+import Selector from './components/Selector';
+import ENV_CONFIG from './environment/env-config';
+import ERRORS from './constants/error';
+import SELECT_ITEMS from './constants/select-items';
 
 function App() {
 
   const [characters, setCharacters] = useState([]);
-  const [isAlive, setIsAlive] = useState([]);
+  const [status, setStatus] = useState('');
   const [gender, setGender] = useState('');
   const [name, setName] = useState('');
   const [paginationData, setPaginationData] = useState([]);
@@ -26,20 +26,26 @@ function App() {
   }
 
   const handleGenderChange = (event) => {
+    setPage(0);
     setGender(event.target.value);
   }
 
   const handleNameChange = (event) => {
+    setPage(0);
     setName(event.target.value);
+  }
+
+  const handleStatusChange = (event) => {
+    setStatus(event.target.value);
   }
 
   const getCharactersHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://rickandmortyapi.com/api/character/?page=${page}&status=${isAlive ? 'alive' : 'dead'}&gender=${gender}&name=${name}`);
+      const response = await fetch(`${ENV_CONFIG.rickMortyApiUrl}?page=${page}&status=${status}&gender=${gender}&name=${name}`);
       if (!response.ok) {
-        throw new Error('Could not load characters!');
+        throw new Error(ERRORS.notLoaded);
       }
 
       const data = await response.json();
@@ -56,13 +62,12 @@ function App() {
       });
       setCharacters(tranformedCharacters);
       setPaginationData(data.info);
-      console.log(data.info);
     } catch (error) {
       setError(error.message);
       setCharacters([]);
     }
     setIsLoading(false);
-  }, [gender, isAlive, name, page]);
+  }, [gender, status, name, page]);
 
   useEffect(() => {
     getCharactersHandler();
@@ -72,22 +77,9 @@ function App() {
     <Box sx={{ flexGrow: 1 }}>
       <Header />
       <Pagination count={paginationData.pages} onChange={handlePageChange} variant="outlined" shape="rounded" />
-      <TextField onChange={handleNameChange} id="outlined-basic" label="Outlined" variant="outlined" />
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Gender</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={gender}
-          label="Gender"
-          onChange={handleGenderChange}
-        >
-          <MenuItem value={''}>Any</MenuItem>
-          <MenuItem value={'male'}>Male</MenuItem>
-          <MenuItem value={'female'}>Female</MenuItem>
-          <MenuItem value={'genderless'}>Genderless</MenuItem>
-        </Select>
-      </FormControl>
+      <TextField onChange={handleNameChange} id="name-search" label="Name..." variant="outlined" />
+      <Selector value={gender} handleChange={handleGenderChange} title={'Gender'} items={SELECT_ITEMS.genderOptions} />
+      <Selector value={status} handleChange={handleStatusChange} title={'Status'} items={SELECT_ITEMS.statusOptions} />
       <CardList characters={characters} />
     </Box>
   );
