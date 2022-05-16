@@ -1,12 +1,13 @@
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import LinearProgress from '@mui/material/LinearProgress';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import CardList from './components/CardList';
-import CircularLoading from './components/CircularLoading';
 import Selector from './components/Selector';
 import ERRORS from './constants/error';
 import SELECT_ITEMS from './constants/select-items';
@@ -43,13 +44,24 @@ function App() {
     setStatus(event.target.value);
   }
 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#ff5000',
+      },
+      secondary: {
+        main: '#ff3d00',
+      },
+    },
+  });
+
   const getCharactersHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await fetch(`${ENV_CONFIG.rickMortyApiUrl}?page=${page}&status=${status}&gender=${gender}&name=${name}`);
       if (!response.ok) {
-        if(response.status !== 404) throw new Error(ERRORS.notLoaded);
+        if (response.status !== 404) throw new Error(ERRORS.notLoaded);
         else throw new Error(ERRORS.noData);
       }
 
@@ -80,23 +92,25 @@ function App() {
   }, [getCharactersHandler]);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Header />
-
-      <Stack className='Stack' direction={{ xs: 'column', md: 'row' }} spacing={2} divider={<Divider orientation="vertical" flexItem />}>
-        <Pagination count={paginationData.pages} onChange={handlePageChange} variant="outlined" shape="rounded" />
-        <TextField className='name-input' onChange={handleNameChange} id="name-search" label={TITLES.nameInput} variant="outlined" />
-        <Stack className='Stack' spacing={2}>
-          <Selector value={gender} handleChange={handleGenderChange} title={TITLES.genderSelect} items={SELECT_ITEMS.genderOptions} />
-          <Selector value={status} handleChange={handleStatusChange} title={TITLES.statusSelect} items={SELECT_ITEMS.statusOptions} />
+    <ThemeProvider theme={theme}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Header />
+        <Stack className='Stack' direction={{ xs: 'column', md: 'row' }} spacing={2} divider={<Divider orientation="vertical" flexItem />}>
+          <Pagination count={paginationData.pages} onChange={handlePageChange} variant="outlined" shape="rounded" />
+          <TextField className='name-input' onChange={handleNameChange} id="name-search" label={TITLES.nameInput} variant="outlined" />
+          <Stack className='Stack' spacing={2}>
+            <Selector value={gender} handleChange={handleGenderChange} title={TITLES.genderSelect} items={SELECT_ITEMS.genderOptions} />
+            <Selector value={status} handleChange={handleStatusChange} title={TITLES.statusSelect} items={SELECT_ITEMS.statusOptions} />
+          </Stack>
         </Stack>
-      </Stack>
-
-      {isLoading ?  <CircularLoading /> : 
-      characters.length > 0 ? 
-      <CardList characters={characters} /> : 
-      <h1 className='centered-indicator'>{error}</h1>}
-    </Box>
+        {
+          isLoading ? <LinearProgress /> :
+            characters.length > 0 ?
+              <CardList characters={characters} /> :
+              <h1 className='centered-indicator'>{error}</h1>
+        }
+      </Box>
+    </ThemeProvider>
   );
 }
 
