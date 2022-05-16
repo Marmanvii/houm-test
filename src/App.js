@@ -9,10 +9,11 @@ import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import CardList from './components/CardList';
 import Selector from './components/Selector';
-import ERRORS from './constants/error';
+import ERRORS from './constants/errors';
 import SELECT_ITEMS from './constants/select-items';
 import TITLES from './constants/titles';
 import ENV_CONFIG from './environment/env-config';
+import COLORS from './constants/colors';
 import Header from './Layout/header/Header';
 
 function App() {
@@ -47,10 +48,10 @@ function App() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#ff5000',
+        main: COLORS.primary,
       },
       secondary: {
-        main: '#ff3d00',
+        main: COLORS.secondary,
       },
     },
   });

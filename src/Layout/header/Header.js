@@ -7,10 +7,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Fragment } from 'react';
 import TITLES from '../../constants/titles';
+import COLORS from '../../constants/colors';
 
 const ColorAppBar = styled(AppBar)(({ theme }) => ({
     backgroundColor: 'white',
-    color: `#ff452b`,
+    color: COLORS.primary,
 }));
 
 const Header = (props) => {
