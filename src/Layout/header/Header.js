@@ -1,17 +1,23 @@
+import MenuIcon from '@mui/icons-material/Menu';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import { styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import { Fragment } from 'react';
+import TITLES from '../../constants/titles';
+
+const ColorAppBar = styled(AppBar)(({ theme }) => ({
+    backgroundColor: 'white',
+    color: `#ff452b`,
+}));
 
 const Header = (props) => {
     return (
         <Fragment>
             <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="static">
+                <ColorAppBar position="static">
                     <Toolbar>
                         <IconButton
                             size="large"
@@ -23,11 +29,10 @@ const Header = (props) => {
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                            Houm
+                            {TITLES.appBar}
                         </Typography>
-                        {/* <Button color="inherit">Login</Button> */}
                     </Toolbar>
-                </AppBar>
+                </ColorAppBar>
             </Box>
         </Fragment>
     );

@@ -1,10 +1,21 @@
 import Character from './Character';
 import Grid from '@mui/material/Grid';
+import { styled } from '@mui/material/styles';
+
+const CharacterList = styled(Grid)(({ theme }) => ({
+    justifyContent: 'center',
+    marginLeft: `0`,
+    maxWidth: 'fit-content',
+    [theme.breakpoints.up('md')]: {
+        justifyContent: 'flex-start',
+        marginLeft: `5vw`,
+    },
+}));
 
 const CardList = (props) => {
     return (
-        <Grid container columns={3} justifyContent="space-around"
-        alignItems="center">
+        <CharacterList container columns={3} justifyContent="space-around"
+            alignItems="center">
             {props.characters.map((character) => {
                 return <Character
                     key={character.id}
@@ -13,9 +24,10 @@ const CardList = (props) => {
                     origin={character.origin}
                     species={character.species}
                     location={character.location}
+                    status={character.status}
                 />
             })}
-        </Grid>
+        </CharacterList>
     );
 };
 

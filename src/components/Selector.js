@@ -2,14 +2,20 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { styled } from '@mui/material/styles';
+const SelectorForm = styled(FormControl)(({ theme }) => ({
+    maxWidth: 300,
+    width: `90vw`,
+    margin: `10px 10px 10px`,
+}));
 
 export const Selector = (props) => {
     return (
-        <FormControl fullWidth>
+        <SelectorForm>
             <InputLabel id="select-label">{props.title}</InputLabel>
             <Select
                 labelId="select-label"
-                id="gender-select"
+                id="select"
                 value={props.value}
                 label={props.title}
                 onChange={props.handleChange}
@@ -20,7 +26,7 @@ export const Selector = (props) => {
                     )
                 })}
             </Select>
-        </FormControl>
+        </SelectorForm>
     )
 }
 

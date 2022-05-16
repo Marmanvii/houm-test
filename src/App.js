@@ -1,14 +1,18 @@
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import CardList from './components/CardList';
-import Header from './Layout/header/Header';
-import TextField from '@mui/material/TextField';
+import CircularLoading from './components/CircularLoading';
 import Selector from './components/Selector';
-import ENV_CONFIG from './environment/env-config';
 import ERRORS from './constants/error';
 import SELECT_ITEMS from './constants/select-items';
+import TITLES from './constants/titles';
+import ENV_CONFIG from './environment/env-config';
+import Header from './Layout/header/Header';
 
 function App() {
 
@@ -45,7 +49,8 @@ function App() {
     try {
       const response = await fetch(`${ENV_CONFIG.rickMortyApiUrl}?page=${page}&status=${status}&gender=${gender}&name=${name}`);
       if (!response.ok) {
-        throw new Error(ERRORS.notLoaded);
+        if(response.status !== 404) throw new Error(ERRORS.notLoaded);
+        else throw new Error(ERRORS.noData);
       }
 
       const data = await response.json();
@@ -58,6 +63,7 @@ function App() {
           origin: characterData.origin.name,
           location: characterData.location.name,
           species: characterData.species,
+          status: characterData.status,
         };
       });
       setCharacters(tranformedCharacters);
@@ -76,11 +82,20 @@ function App() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Header />
-      <Pagination count={paginationData.pages} onChange={handlePageChange} variant="outlined" shape="rounded" />
-      <TextField onChange={handleNameChange} id="name-search" label="Name..." variant="outlined" />
-      <Selector value={gender} handleChange={handleGenderChange} title={'Gender'} items={SELECT_ITEMS.genderOptions} />
-      <Selector value={status} handleChange={handleStatusChange} title={'Status'} items={SELECT_ITEMS.statusOptions} />
-      <CardList characters={characters} />
+
+      <Stack className='Stack' direction={{ xs: 'column', md: 'row' }} spacing={2} divider={<Divider orientation="vertical" flexItem />}>
+        <Pagination count={paginationData.pages} onChange={handlePageChange} variant="outlined" shape="rounded" />
+        <TextField className='name-input' onChange={handleNameChange} id="name-search" label={TITLES.nameInput} variant="outlined" />
+        <Stack className='Stack' spacing={2}>
+          <Selector value={gender} handleChange={handleGenderChange} title={TITLES.genderSelect} items={SELECT_ITEMS.genderOptions} />
+          <Selector value={status} handleChange={handleStatusChange} title={TITLES.statusSelect} items={SELECT_ITEMS.statusOptions} />
+        </Stack>
+      </Stack>
+
+      {isLoading ?  <CircularLoading /> : 
+      characters.length > 0 ? 
+      <CardList characters={characters} /> : 
+      <h1 className='centered-indicator'>{error}</h1>}
     </Box>
   );
 }
