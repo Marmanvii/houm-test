@@ -7,18 +7,16 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useCallback, useEffect, useState } from 'react';
+import getCharacters from './api/GetCharacters';
 import './App.css';
 import CardList from './components/CardList';
 import Selector from './components/Selector';
 import COLORS from './constants/colors';
-import ERRORS from './constants/errors';
 import SELECT_ITEMS from './constants/select-items';
 import TITLES from './constants/titles';
-import ENV_CONFIG from './environment/env-config';
 import Header from './Layout/header/Header';
 
 function App() {
-
   const [characters, setCharacters] = useState([]);
   const [status, setStatus] = useState('');
   const [gender, setGender] = useState('');
@@ -61,27 +59,9 @@ function App() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${ENV_CONFIG.rickMortyApiUrl}?page=${page}&status=${status}&gender=${gender}&name=${name}`);
-      if (!response.ok) {
-        if (response.status !== 404) throw new Error(ERRORS.notLoaded);
-        else throw new Error(ERRORS.noData);
-      }
-
-      const data = await response.json();
-
-      const tranformedCharacters = data.results.map((characterData) => {
-        return {
-          id: characterData.id,
-          name: characterData.name,
-          image: characterData.image,
-          origin: characterData.origin.name,
-          location: characterData.location.name,
-          species: characterData.species,
-          status: characterData.status,
-        };
-      });
-      setCharacters(tranformedCharacters);
-      setPaginationData(data.info);
+      const tranformedCharacters = await getCharacters(page, status, gender, name);
+      setCharacters(tranformedCharacters.data);
+      setPaginationData(tranformedCharacters.info);
     } catch (error) {
       setError(error.message);
       setCharacters([]);
