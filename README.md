@@ -1,6 +1,8 @@
 # NotHoum
 React web page that displays characters from the Rick&Morty TV show using [The Rick and Morty API](https://rickandmortyapi.com/).
 
+Currently deployed at: https://not-houm.herokuapp.com/
+
 ## Technologies
 - Material UI: No particular reason to use this framework
 - React: Required by the application
