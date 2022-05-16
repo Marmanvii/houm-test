@@ -4,6 +4,7 @@ import CardMedia from '@mui/material/CardMedia';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
+import Fade from '@mui/material/Fade';
 
 const CharacterCard = styled(Card)(({ theme }) => ({
     height: 350,
@@ -13,24 +14,26 @@ const CharacterCard = styled(Card)(({ theme }) => ({
 
 const Character = (props) => {
     return (
-        <CharacterCard>
-            <CardMedia
-                component="img"
-                height="140"
-                image={props.image}
-            />
-            <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    {props.species}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="div">
-                    {props.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    Living in {props.location}, currently {props.status.toLowerCase()}
-                </Typography>
-            </CardContent>
-        </CharacterCard>
+        <Fade in={true}>
+            <CharacterCard>
+                <CardMedia
+                    component="img"
+                    height="140"
+                    image={props.image}
+                />
+                <CardContent>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                        {props.species}
+                    </Typography>
+                    <Typography gutterBottom variant="h5" component="div">
+                        {props.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        Living in {props.location}, currently {props.status.toLowerCase()}
+                    </Typography>
+                </CardContent>
+            </CharacterCard>
+        </Fade>
     );
 }
 

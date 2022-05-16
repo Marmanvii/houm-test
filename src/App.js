@@ -5,15 +5,16 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import CardList from './components/CardList';
 import Selector from './components/Selector';
+import COLORS from './constants/colors';
 import ERRORS from './constants/errors';
 import SELECT_ITEMS from './constants/select-items';
 import TITLES from './constants/titles';
 import ENV_CONFIG from './environment/env-config';
-import COLORS from './constants/colors';
 import Header from './Layout/header/Header';
 
 function App() {
@@ -108,7 +109,7 @@ function App() {
           isLoading ? <LinearProgress /> :
             characters.length > 0 ?
               <CardList characters={characters} /> :
-              <h1 className='centered-indicator'>{error}</h1>
+              <Typography variant="h3" className='centered-indicator'>{error}</Typography>
         }
       </Box>
     </ThemeProvider>
